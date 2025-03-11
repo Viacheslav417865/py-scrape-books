@@ -24,10 +24,10 @@ class BooksScraperSpiderMiddleware:
     @classmethod
     def from_crawler(cls, crawler: Crawler) -> None:
         # This method is used by Scrapy to create your spiders.
-        string_value = cls()
-        crawler.signals.connect(string_value.spider_opened,
+        middleware_instance = cls()
+        crawler.signals.connect(middleware_instance.spider_opened,
                                 signal=signals.spider_opened)
-        return string_value
+        return middleware_instance
 
     def process_spider_input(self, response: Response, spider: Spider) -> None:
         # Called for each response that goes through the spider
@@ -80,12 +80,12 @@ class BooksScraperDownloaderMiddleware:
     @classmethod
     def from_crawler(cls, crawler: Crawler) -> None:
         # This method is used by Scrapy to create your spiders.
-        spider_instance = cls()
+        middleware_instance = cls()
         crawler.signals.connect(
-            spider_instance.spider_opened,
+            middleware_instance.spider_opened,
             signal=signals.spider_opened
         )
-        return spider_instance
+        return middleware_instance
 
     def process_request(self, request: Request,
                         spider: Spider) -> None:
@@ -103,7 +103,7 @@ class BooksScraperDownloaderMiddleware:
     def process_response(
             self, request: Request,
             response: Response,
-            spider: Spider) -> None:
+            spider: Spider) -> Response:
         # Called with the response returned from the downloader.
 
         # Must either;
